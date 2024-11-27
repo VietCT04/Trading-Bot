@@ -27,7 +27,7 @@ class User:
             password (str): The password of the user.
         """
         self.username = username
-        self.password = password
+        self._password = password
         self._user_id = str(uuid.uuid4())  # Generate a unique ID for the user
 
     @property
@@ -37,6 +37,11 @@ class User:
 
     @classmethod
     def authenticate(cls, username, password):
+        if os.path.exists(cls.credentials_file):
+            with open(cls.credentials_file, "r") as f:
+                cls.credentials = json.load(f)
+        else:
+            cls.credentials = {}
         """
         Authenticates the user by checking the credentials.
         
@@ -47,7 +52,7 @@ class User:
         Returns:
             bool: True if the credentials are valid, False otherwise.
         """
-        return cls.credentials.get(username) == password
+        return cls.credentials.get(username)["password"] == password
 
     @classmethod
     def sign_up(cls, username, password):
@@ -67,7 +72,7 @@ class User:
 
         # Create a new user and store their credentials
         new_user = User(username, password)
-        cls.credentials[username] = password
+        cls.credentials[username]["password"] = password
 
         # Update the credentials JSON file
         cls._save_to_file()
