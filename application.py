@@ -1,11 +1,11 @@
-from user import User
+from usermanager import User
 from servicemanager import *
-from tradinguser import TradingUser
+from tradingusermanager import TradingUser
 
 class Application:
     
     def __init__(self):
-        self.current_user = None
+        self.current_user = User()
     
     def login(self):
         print("\n=== Login ===")
